@@ -86,20 +86,19 @@ static Scanner sc = new Scanner(System.in);
       
     public static String sumar_Binarios(String cadena1, String cadena2) {        
         boolean error = false;
-        
-        if(cadena1.length() != 8 || cadena2.length() != 8) {
-            System.out.println("Ambas cadenas deben tener exactamente 8 digitos.");                       
-        }        
-        
+
+        if (cadena1.length() != 8 || cadena2.length() != 8) {
+            return "Ambas cadenas deben tener exactamente 8 digitos.";
+        }
+
         for (int i = 0; i < 8; i++) {
             if ((cadena1.charAt(i) != '0' && cadena1.charAt(i) != '1') || (cadena2.charAt(i) != '0' && cadena2.charAt(i) != '1')) {
                 error = true;
             }
         }
-        
+
         if (error) {
-            System.out.println("Las cadenas solo deben contener caracteres 0s y 1s.");
-            
+            return "Las cadenas solo deben contener caracteres 0s y 1s.";
         }
         String resultado = "";
         int acarreo = 0;
@@ -160,6 +159,17 @@ static Scanner sc = new Scanner(System.in);
     private static String analisis(String caden, String patron) {
         String signosPuntuacion = ".!?";
 
+        for (int j = 0; j < patron.length(); j++) {
+            char tipo = patron.charAt(j);
+            if (tipo == 'm') {
+                if (j == patron.length() - 1 || patron.charAt(j + 1) != 'c') {
+                    return "";
+                }
+            } else if (tipo != 'c' && tipo != 'n' && tipo != 'p' && tipo != 'm') {
+                return "";
+            }
+        }
+
         for (int i = 0; i <= caden.length() - patron.length(); i++) {
             String subcadena = caden.substring(i, i + patron.length());
             boolean coincide = true;
@@ -188,10 +198,7 @@ static Scanner sc = new Scanner(System.in);
                         coincide = false;
                         break;
                     }
-                    if (j == patron.length() - 1 || patron.charAt(j + 1) != 'c') {
-                        coincide = false;
-                        break;
-                    }
+                    j++;
                 } else {
                     coincide = false;
                     break;
