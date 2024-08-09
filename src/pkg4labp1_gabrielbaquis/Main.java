@@ -11,13 +11,12 @@ import java.util.Scanner;
  * @author gabri
  */
 public class Main {
-
+static Scanner sc = new Scanner(System.in);
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        Scanner sc = new Scanner(System.in);
+        // TODO code application logic here        
         int decision;
         
         do {
@@ -33,6 +32,8 @@ public class Main {
             
             String cadena1;
             String cadena2;
+            String caden;
+            String patron;
             
             switch(decision){
                 case 1:
@@ -60,6 +61,19 @@ public class Main {
                     break;  
                     
                 case 3:
+                    System.out.println("Ingrese una cadena : ");
+                    caden = sc.next();
+                    
+                    System.out.println("Ingrese un patron: ");
+                    patron = sc.next();
+                    
+                    String resultad = analisis(caden,patron);
+                    if (resultad.length() == 0) {
+                        System.out.println("No se encontro ninguna parte de la cadena con ese patron.");
+                    } else {
+                        System.out.println("Patron encontrado: " + resultad);
+                    }
+                    
                     break;    
                     
                 case 4:
@@ -70,17 +84,23 @@ public class Main {
         } while (decision != 4);
     }
       
-    public static String sumar_Binarios(String cadena1, String cadena2) {
+    public static String sumar_Binarios(String cadena1, String cadena2) {        
+        boolean error = false;
+        
         if(cadena1.length() != 8 || cadena2.length() != 8) {
-            System.out.println("Ambas cadenas deben tener exactamente 8 digitos.");            
-        }
-
+            System.out.println("Ambas cadenas deben tener exactamente 8 digitos.");                       
+        }        
+        
         for (int i = 0; i < 8; i++) {
             if ((cadena1.charAt(i) != '0' && cadena1.charAt(i) != '1') || (cadena2.charAt(i) != '0' && cadena2.charAt(i) != '1')) {
-                System.out.println("Las cadenas solo deben contener caracteres 0s y 1s.");
+                error = true;
             }
         }
-
+        
+        if (error) {
+            System.out.println("Las cadenas solo deben contener caracteres 0s y 1s.");
+            
+        }
         String resultado = "";
         int acarreo = 0;
 
@@ -135,5 +155,55 @@ public class Main {
             resul = "La cadena no contiene letras ni numeros";
         }
         return resul;
+    }
+
+    private static String analisis(String caden, String patron) {
+        String signosPuntuacion = ".!?";
+
+        for (int i = 0; i <= caden.length() - patron.length(); i++) {
+            String subcadena = caden.substring(i, i + patron.length());
+            boolean coincide = true;
+
+            for (int j = 0; j < patron.length(); j++) {
+                char caracter = subcadena.charAt(j);
+                char tipo = patron.charAt(j);
+
+                if (tipo == 'c') {
+                    if (!(caracter >= 'a' && caracter <= 'z')) {
+                        coincide = false;
+                        break;
+                    }
+                } else if (tipo == 'n') {
+                    if (!(caracter >= '0' && caracter <= '9')) {
+                        coincide = false;
+                        break;
+                    }
+                } else if (tipo == 'p') {
+                    if (signosPuntuacion.indexOf(caracter) == -1) {
+                        coincide = false;
+                        break;
+                    }
+                } else if (tipo == 'm') {
+                    if (!(caracter >= 'A' && caracter <= 'Z')) {
+                        coincide = false;
+                        break;
+                    }
+                    if (j == patron.length() - 1 || patron.charAt(j + 1) != 'c') {
+                        coincide = false;
+                        break;
+                    }
+                } else {
+                    coincide = false;
+                    break;
+                }
+            }
+
+            if (coincide) {
+                return subcadena;
+            }
+        }
+
+        return "";
+        
     }
 }
